@@ -1,182 +1,306 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Hanami 3D 🌸</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <style>
+
+/* =====================================================
+   GENERAL
+===================================================== */
 
 * {
     box-sizing: border-box;
 }
 
 body {
+
     margin: 0;
+
     font-family: Arial, sans-serif;
+
     background:
-        radial-gradient(circle at top left, #fff4f7, transparent 40%),
-        linear-gradient(135deg, #f8f1e7, #e8f2e5);
+        radial-gradient(
+            circle at top left,
+            #fff4f7,
+            transparent 40%
+        ),
+        linear-gradient(
+            135deg,
+            #f8f1e7,
+            #e8f2e5
+        );
 
     min-height: 100vh;
+
     color: #354235;
+
     overflow-x: hidden;
+
 }
 
-/* ---------------------------
+
+/* =====================================================
    PÉTALOS
----------------------------- */
+===================================================== */
 
 .petalo {
+
     position: fixed;
+
     width: 14px;
     height: 20px;
+
     background: #f3a9bd;
+
     border-radius: 100% 0 100% 0;
+
     opacity: 0.5;
+
     animation: caer linear infinite;
+
     pointer-events: none;
+
 }
 
 .petalo:nth-child(1) {
+
     left: 10%;
+
     animation-duration: 8s;
+
 }
 
 .petalo:nth-child(2) {
+
     left: 30%;
+
     animation-duration: 11s;
+
     animation-delay: 2s;
+
 }
 
 .petalo:nth-child(3) {
+
     left: 60%;
+
     animation-duration: 9s;
+
     animation-delay: 1s;
+
 }
 
 .petalo:nth-child(4) {
+
     left: 85%;
+
     animation-duration: 12s;
+
     animation-delay: 3s;
+
 }
+
 
 @keyframes caer {
 
     0% {
-        transform: translateY(-100px) rotate(0deg);
+
+        transform:
+            translateY(-100px)
+            rotate(0deg);
+
     }
 
     100% {
-        transform: translateY(110vh) rotate(360deg);
+
+        transform:
+            translateY(110vh)
+            rotate(360deg);
+
     }
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    INTRO
----------------------------- */
+===================================================== */
 
 .intro {
+
     position: fixed;
+
     inset: 0;
+
     background: #f8f1e7;
 
     display: flex;
+
     justify-content: center;
+
     align-items: center;
 
     z-index: 1000;
 
-    animation: introSalida 1.2s ease forwards;
+    animation:
+        introSalida 1.2s ease forwards;
+
     animation-delay: 2.2s;
+
 }
+
 
 .intro-contenido {
+
     text-align: center;
-    animation: aparecer 1s ease;
+
+    animation:
+        aparecer 1s ease;
+
 }
+
 
 .intro-logo {
+
     font-size: 60px;
+
 }
+
 
 .intro h1 {
+
     margin: 10px 0;
+
     color: #3c5941;
+
 }
 
+
 .intro p {
+
     color: #777;
+
 }
+
 
 @keyframes aparecer {
 
     from {
+
         opacity: 0;
-        transform: scale(0.8);
+
+        transform:
+            scale(0.8);
+
     }
 
     to {
+
         opacity: 1;
-        transform: scale(1);
+
+        transform:
+            scale(1);
+
     }
 
 }
+
 
 @keyframes introSalida {
 
     to {
+
         opacity: 0;
+
         visibility: hidden;
+
     }
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    CONTENEDOR
----------------------------- */
+===================================================== */
 
 .container {
+
     width: 92%;
+
     max-width: 520px;
+
     margin: auto;
+
     padding: 35px 0;
+
 }
 
-/* ---------------------------
+
+/* =====================================================
    MARCA
----------------------------- */
+===================================================== */
 
 .brand {
+
     text-align: center;
+
     margin-bottom: 20px;
+
 }
+
 
 .brand-title {
+
     font-size: 14px;
+
     letter-spacing: 4px;
+
     color: #687d68;
+
     font-weight: bold;
+
 }
+
 
 .brand-subtitle {
+
     font-size: 11px;
+
     color: #999;
+
     letter-spacing: 2px;
+
 }
 
-/* ---------------------------
+
+/* =====================================================
    CARD PRINCIPAL
----------------------------- */
+===================================================== */
 
 .card {
+
     position: relative;
 
-    background: rgba(255,255,255,0.78);
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
     backdrop-filter: blur(12px);
 
     border-radius: 30px;
@@ -184,71 +308,109 @@ body {
     padding: 28px;
 
     box-shadow:
-        0 20px 50px rgba(70,80,60,0.15);
+        0 20px 50px
+        rgba(
+            70,
+            80,
+            60,
+            0.15
+        );
 
-    animation: subir 0.8s ease;
+    animation:
+        subir 0.8s ease;
+
 }
+
 
 @keyframes subir {
 
     from {
+
         opacity: 0;
-        transform: translateY(30px);
+
+        transform:
+            translateY(30px);
+
     }
 
     to {
+
         opacity: 1;
-        transform: translateY(0);
+
+        transform:
+            translateY(0);
+
     }
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    PLANTA
----------------------------- */
+===================================================== */
 
 .planta {
+
     text-align: center;
+
 }
 
+
 .planta-icon {
+
     font-size: 75px;
 
     animation:
         flotar 3s ease-in-out infinite;
+
 }
+
 
 @keyframes flotar {
 
-    0%,100% {
-        transform: translateY(0);
+    0%,
+    100% {
+
+        transform:
+            translateY(0);
+
     }
 
     50% {
-        transform: translateY(-8px);
+
+        transform:
+            translateY(-8px);
+
     }
 
 }
 
+
 .planta h1 {
+
     margin: 5px 0;
 
     color: #344d38;
 
     font-size: 32px;
+
 }
 
+
 .especie {
+
     color: #789078;
 
     font-style: italic;
 
     font-size: 16px;
+
 }
 
-/* ---------------------------
+
+/* =====================================================
    TITULO SECCION
----------------------------- */
+===================================================== */
 
 .section-title {
 
@@ -266,21 +428,24 @@ body {
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    CUIDADOS
----------------------------- */
+===================================================== */
 
 .cuidados {
 
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        1fr 1fr;
 
     gap: 12px;
 
     margin-top: 15px;
 
 }
+
 
 .cuidado {
 
@@ -292,11 +457,13 @@ body {
 
 }
 
+
 .cuidado-icon {
 
     font-size: 24px;
 
 }
+
 
 .cuidado-titulo {
 
@@ -308,6 +475,7 @@ body {
 
 }
 
+
 .cuidado-dato {
 
     font-weight: bold;
@@ -318,15 +486,17 @@ body {
 
 }
 
-/* ---------------------------
-   BOTÓN INFORMACIÓN PLANTA
----------------------------- */
+
+/* =====================================================
+   BOTÓN INFORMACIÓN
+===================================================== */
 
 .info-planta-btn {
 
     position: absolute;
 
     top: 22px;
+
     right: 22px;
 
     width: auto;
@@ -349,6 +519,7 @@ body {
 
 }
 
+
 .info-planta-btn:hover {
 
     transform: none;
@@ -357,13 +528,14 @@ body {
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    FICHA DE LA PLANTA
----------------------------- */
+===================================================== */
 
 .ficha-planta {
 
-    display: none;
+    display: none !important;
 
     margin-top: 25px;
 
@@ -371,11 +543,17 @@ body {
 
 }
 
+
 .ficha-planta.mostrar {
 
-    display: block;
+    display: block !important;
 
 }
+
+
+/* =====================================================
+   IMAGEN
+===================================================== */
 
 .planta-imagen {
 
@@ -395,6 +573,11 @@ body {
 
 }
 
+
+/* =====================================================
+   DESCRIPCIÓN
+===================================================== */
+
 .planta-descripcion {
 
     margin-top: 15px;
@@ -409,6 +592,11 @@ body {
 
 }
 
+
+/* =====================================================
+   DATOS CURIOSOS
+===================================================== */
+
 .datos-curiosos {
 
     margin-top: 15px;
@@ -420,6 +608,7 @@ body {
     background: #f4f7f0;
 
 }
+
 
 .datos-curiosos button {
 
@@ -437,11 +626,13 @@ body {
 
 }
 
+
 .curiosidades-contenido {
 
     display: none;
 
-    padding: 0 18px 18px;
+    padding:
+        0 18px 18px;
 
     color: #596659;
 
@@ -453,11 +644,13 @@ body {
 
 }
 
+
 .curiosidades-contenido.mostrar {
 
     display: block;
 
 }
+
 
 .curiosidad {
 
@@ -465,15 +658,17 @@ body {
 
 }
 
+
 .curiosidad strong {
 
     color: #486049;
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    RIEGO
----------------------------- */
+===================================================== */
 
 .riego {
 
@@ -483,13 +678,15 @@ body {
 
     border-radius: 20px;
 
-    background: linear-gradient(
-        135deg,
-        #e7f4ea,
-        #f4f8ed
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #e7f4ea,
+            #f4f8ed
+        );
 
 }
+
 
 .riego-titulo {
 
@@ -499,6 +696,7 @@ body {
 
 }
 
+
 #estado {
 
     font-size: 17px;
@@ -506,6 +704,7 @@ body {
     font-weight: bold;
 
 }
+
 
 #proximoRiego {
 
@@ -515,9 +714,10 @@ body {
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    CONSEJO
----------------------------- */
+===================================================== */
 
 .consejo {
 
@@ -535,9 +735,10 @@ body {
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    MENSAJE
----------------------------- */
+===================================================== */
 
 .mensaje {
 
@@ -547,15 +748,17 @@ body {
 
     border-radius: 22px;
 
-    background: linear-gradient(
-        135deg,
-        #ffe9ef,
-        #fff3f5
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #ffe9ef,
+            #fff3f5
+        );
 
     text-align: center;
 
 }
+
 
 .mensaje-titulo {
 
@@ -569,6 +772,7 @@ body {
 
 }
 
+
 #mensaje {
 
     margin-top: 10px;
@@ -581,9 +785,10 @@ body {
 
 }
 
-/* ---------------------------
-   BOTON
----------------------------- */
+
+/* =====================================================
+   BOTONES GENERALES
+===================================================== */
 
 button {
 
@@ -611,15 +816,18 @@ button {
 
 }
 
+
 button:hover {
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    FORMULARIO
----------------------------- */
+===================================================== */
 
 #formulario {
 
@@ -628,6 +836,7 @@ button:hover {
     margin-top: 25px;
 
 }
+
 
 input {
 
@@ -647,6 +856,7 @@ input {
 
 }
 
+
 label {
 
     font-size: 12px;
@@ -657,9 +867,10 @@ label {
 
 }
 
-/* ---------------------------
+
+/* =====================================================
    FOOTER
----------------------------- */
+===================================================== */
 
 .footer {
 
@@ -677,9 +888,13 @@ label {
 
 </head>
 
+
 <body>
 
-<!-- PÉTALOS -->
+
+<!-- =====================================================
+     PÉTALOS
+===================================================== -->
 
 <div class="petalo"></div>
 <div class="petalo"></div>
@@ -687,7 +902,9 @@ label {
 <div class="petalo"></div>
 
 
-<!-- INTRO -->
+<!-- =====================================================
+     INTRO
+===================================================== -->
 
 <div class="intro">
 
@@ -697,7 +914,9 @@ label {
             🌸🌱
         </div>
 
-        <h1>Hanami 3D</h1>
+        <h1>
+            Hanami 3D
+        </h1>
 
         <p>
             Una pequeña plantita para vos
@@ -708,9 +927,14 @@ label {
 </div>
 
 
-<!-- CONTENIDO -->
+<!-- =====================================================
+     CONTENIDO
+===================================================== -->
 
 <div class="container">
+
+
+    <!-- MARCA -->
 
     <div class="brand">
 
@@ -725,21 +949,29 @@ label {
     </div>
 
 
+    <!-- CARD -->
+
     <div class="card">
 
-        <!-- BOTÓN INFORMACIÓN -->
+
+        <!-- =================================================
+             BOTÓN INFORMACIÓN
+        ================================================== -->
 
         <button
             type="button"
             class="info-planta-btn"
-            onclick="mostrarInfoPlanta()"
             id="botonInfoPlanta"
         >
+
             🌿 Información
+
         </button>
 
 
-        <!-- PLANTA -->
+        <!-- =================================================
+             PLANTA
+        ================================================== -->
 
         <div class="planta">
 
@@ -747,27 +979,42 @@ label {
                 🌱
             </div>
 
+
             <h1 id="nombre">
+
                 Cargando...
+
             </h1>
 
-            <div class="especie" id="especie">
+
+            <div
+                class="especie"
+                id="especie"
+            >
+
                 ...
+
             </div>
 
         </div>
 
 
-        <!-- FICHA DE LA PLANTA -->
+        <!-- =================================================
+             FICHA DE LA PLANTA
+        ================================================== -->
 
         <div
             class="ficha-planta"
             id="fichaPlanta"
         >
 
+
             <div class="section-title">
+
                 🌵 Sobre tu suculenta
+
             </div>
+
 
             <img
                 class="planta-imagen"
@@ -775,6 +1022,7 @@ label {
                 alt="Suculenta"
                 loading="lazy"
             >
+
 
             <div class="planta-descripcion">
 
@@ -785,7 +1033,10 @@ label {
             </div>
 
 
+            <!-- CUIDADOS GENERALES -->
+
             <div class="cuidados">
+
 
                 <div class="cuidado">
 
@@ -854,19 +1105,24 @@ label {
 
                 </div>
 
+
             </div>
 
 
-            <!-- DATOS CURIOSOS -->
+            <!-- =================================================
+                 DATOS CURIOSOS
+            ================================================== -->
 
             <div class="datos-curiosos">
 
+
                 <button
                     type="button"
-                    onclick="mostrarCuriosidades()"
                     id="botonCuriosidades"
                 >
+
                     🌿 ¿Sabías que...?
+
                 </button>
 
 
@@ -875,14 +1131,16 @@ label {
                     id="curiosidades"
                 >
 
+
                     <div class="curiosidad">
 
                         <strong>
                             💧 Reservas de agua:
                         </strong>
 
-                        muchas suculentas almacenan agua en sus tejidos
-                        para soportar períodos de sequía.
+                        muchas suculentas almacenan agua
+                        en sus tejidos para soportar períodos
+                        de sequía.
 
                     </div>
 
@@ -893,8 +1151,9 @@ label {
                             ☀️ El color puede cambiar:
                         </strong>
 
-                        algunas especies pueden modificar ligeramente
-                        su color según la cantidad de luz que reciben.
+                        algunas especies pueden modificar
+                        ligeramente su color según la cantidad
+                        de luz que reciben.
 
                     </div>
 
@@ -905,8 +1164,9 @@ label {
                             🌱 No todas son iguales:
                         </strong>
 
-                        "suculenta" describe una adaptación para almacenar
-                        agua; no se trata de una única familia de plantas.
+                        "suculenta" describe una adaptación
+                        para almacenar agua; no se trata de
+                        una única familia de plantas.
 
                     </div>
 
@@ -917,26 +1177,34 @@ label {
                             🪴 Menos agua no significa abandono:
                         </strong>
 
-                        el exceso de agua suele ser más problemático que
-                        dejar secar el sustrato entre riegos.
+                        el exceso de agua suele ser más
+                        problemático que dejar secar el
+                        sustrato entre riegos.
 
                     </div>
+
 
                 </div>
 
             </div>
 
+
         </div>
 
 
-        <!-- CUIDADOS -->
+        <!-- =================================================
+             CUIDADOS DE LA MACETA
+        ================================================== -->
 
         <div class="section-title">
+
             🌿 Conocé a tu plantita
+
         </div>
 
 
         <div class="cuidados">
+
 
             <div class="cuidado">
 
@@ -950,8 +1218,11 @@ label {
 
                 <div
                     class="cuidado-dato"
-                    id="frecuencia">
+                    id="frecuencia"
+                >
+
                     ...
+
                 </div>
 
             </div>
@@ -969,8 +1240,11 @@ label {
 
                 <div
                     class="cuidado-dato"
-                    id="luz">
+                    id="luz"
+                >
+
                     ...
+
                 </div>
 
             </div>
@@ -988,8 +1262,11 @@ label {
 
                 <div
                     class="cuidado-dato"
-                    id="ultimoRiego">
+                    id="ultimoRiego"
+                >
+
                     ...
+
                 </div>
 
             </div>
@@ -1007,144 +1284,199 @@ label {
 
                 <div
                     class="cuidado-dato"
-                    id="proximoRiego">
+                    id="proximoRiego"
+                >
+
                     ...
+
                 </div>
 
             </div>
 
+
         </div>
 
 
-        <!-- ESTADO DE RIEGO -->
+        <!-- =================================================
+             ESTADO DE RIEGO
+        ================================================== -->
 
         <div class="riego">
 
+
             <div class="riego-titulo">
+
                 💧 Estado de mi riego
+
             </div>
 
+
             <div id="estado">
+
                 Calculando...
+
             </div>
+
 
         </div>
 
 
-        <!-- CONSEJO -->
+        <!-- =================================================
+             CONSEJO
+        ================================================== -->
 
         <div class="consejo">
 
             🌿 <strong>Consejito:</strong>
 
+
             <div id="consejo">
+
                 ...
+
             </div>
+
 
         </div>
 
 
-        <!-- MENSAJE -->
+        <!-- =================================================
+             MENSAJE
+        ================================================== -->
 
         <div class="mensaje">
 
+
             <div class="mensaje-titulo">
+
                 💌 UN MENSAJE PARA VOS
+
             </div>
 
+
             <div id="mensaje">
+
                 ...
+
             </div>
+
 
         </div>
 
 
-        <!-- BOTÓN CONFIGURACIÓN -->
+        <!-- =================================================
+             CONFIGURACIÓN
+        ================================================== -->
 
-        <button onclick="mostrarFormulario()">
+        <button
+            onclick="mostrarFormulario()"
+        >
 
             ⚙️ Configurar mi plantita
 
         </button>
 
 
-        <!-- FORMULARIO -->
+        <!-- =================================================
+             FORMULARIO
+        ================================================== -->
 
         <div id="formulario">
+
 
             <label>
                 Nombre de la planta
             </label>
 
+
             <input
                 id="inputNombre"
-                type="text">
+                type="text"
+            >
 
 
             <label>
                 Especie
             </label>
 
+
             <input
                 id="inputEspecie"
-                type="text">
+                type="text"
+            >
 
 
             <label>
                 Frecuencia de riego (días)
             </label>
 
+
             <input
                 id="inputRiego"
-                type="number">
+                type="number"
+            >
 
 
             <label>
                 Último riego
             </label>
 
+
             <input
                 id="inputUltimoRiego"
-                type="date">
+                type="date"
+            >
 
 
             <label>
                 Luz
             </label>
 
+
             <input
                 id="inputLuz"
-                type="text">
+                type="text"
+            >
 
 
             <label>
                 Consejo
             </label>
 
+
             <input
                 id="inputConsejo"
-                type="text">
+                type="text"
+            >
 
 
             <label>
                 Mensaje
             </label>
 
+
             <input
                 id="inputMensaje"
-                type="text">
+                type="text"
+            >
 
 
-            <button onclick="guardarDatos()">
+            <button
+                onclick="guardarDatos()"
+            >
 
                 💾 Guardar cambios
 
             </button>
 
+
         </div>
+
 
     </div>
 
+
+    <!-- FOOTER -->
 
     <div class="footer">
 
@@ -1152,20 +1484,24 @@ label {
 
     </div>
 
+
 </div>
 
 
 <script>
 
-/* ===========================
+
+/* =====================================================
    SUPABASE
-=========================== */
+===================================================== */
 
 const SUPABASE_URL =
     "https://mdcgmuxwckeeqqjjuvyw.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_0x8huqPAlxgShTq8qI8EgA__wJE62qm";
+
 
 const supabaseClient =
     supabase.createClient(
@@ -1174,163 +1510,216 @@ const supabaseClient =
     );
 
 
-/* ===========================
+/* =====================================================
    ID DE LA MACETA
-=========================== */
+===================================================== */
 
 const parametros =
     new URLSearchParams(
         window.location.search
     );
 
+
 const macetaID =
     parametros.get("id") || "001";
 
 
-/* ===========================
+/* =====================================================
    VARIABLE PARA ÚLTIMO RIEGO
-=========================== */
+===================================================== */
 
 let fechaUltimoRiego = "";
 
 
-/* ===========================
+/* =====================================================
    FORMATEAR FECHA
-=========================== */
+===================================================== */
 
 function formatearFecha(fecha) {
 
-    if (!fecha) return "Sin registrar";
 
-    const partes = fecha.split("-");
+    if (!fecha) {
 
-    const fechaLocal = new Date(
-        partes[0],
-        partes[1] - 1,
-        partes[2]
-    );
+        return "Sin registrar";
+
+    }
+
+
+    const partes =
+        fecha.split("-");
+
+
+    const fechaLocal =
+        new Date(
+            partes[0],
+            partes[1] - 1,
+            partes[2]
+        );
+
 
     return fechaLocal.toLocaleDateString(
         "es-AR",
         {
+
             day: "numeric",
+
             month: "long"
+
         }
     );
 
 }
 
 
-/* ===========================
+/* =====================================================
    CALCULAR PRÓXIMO RIEGO
-=========================== */
+===================================================== */
 
 function calcularProximoRiego(
     fecha,
     dias
 ) {
 
-    const partes = fecha.split("-");
 
-    const resultado = new Date(
-        partes[0],
-        partes[1] - 1,
-        partes[2]
-    );
+    const partes =
+        fecha.split("-");
+
+
+    const resultado =
+        new Date(
+            partes[0],
+            partes[1] - 1,
+            partes[2]
+        );
+
 
     resultado.setDate(
-        resultado.getDate() + Number(dias)
+        resultado.getDate() +
+        Number(dias)
     );
+
 
     return resultado;
 
 }
 
 
-/* ===========================
+/* =====================================================
    CARGAR MACETA
-=========================== */
+===================================================== */
 
 async function cargarMaceta() {
+
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from("macetas")
-        .select("*")
-        .eq("id", macetaID)
-        .single();
+    } =
+        await supabaseClient
+            .from("macetas")
+            .select("*")
+            .eq(
+                "id",
+                macetaID
+            )
+            .single();
 
 
     if (error) {
 
+
         console.error(error);
 
-        document.getElementById("nombre")
+
+        document
+            .getElementById("nombre")
             .textContent =
             "No encontramos esta maceta 🌱";
+
 
         return;
 
     }
 
 
-    /* Guardamos la fecha original */
+    /* FECHA */
 
     fechaUltimoRiego =
         data.ultimo_riego || "";
 
 
-    /* DATOS PRINCIPALES */
+    /* NOMBRE */
 
-    document.getElementById("nombre")
+    document
+        .getElementById("nombre")
         .textContent =
-        data.nombre_planta || "Mi plantita";
+        data.nombre_planta ||
+        "Mi plantita";
 
 
-    document.getElementById("especie")
+    /* ESPECIE */
+
+    document
+        .getElementById("especie")
         .textContent =
-        data.especie || "Una plantita 🌱";
+        data.especie ||
+        "Una plantita 🌱";
 
 
-    document.getElementById("frecuencia")
+    /* FRECUENCIA */
+
+    document
+        .getElementById("frecuencia")
         .textContent =
         `Cada ${data.frecuencia_riego} días`;
 
 
-    document.getElementById("luz")
+    /* LUZ */
+
+    document
+        .getElementById("luz")
         .textContent =
-        data.luz || "Sin registrar";
+        data.luz ||
+        "Sin registrar";
 
 
-    document.getElementById("ultimoRiego")
+    /* ÚLTIMO RIEGO */
+
+    document
+        .getElementById("ultimoRiego")
         .textContent =
         formatearFecha(
             data.ultimo_riego
         );
 
 
-    document.getElementById("consejo")
+    /* CONSEJO */
+
+    document
+        .getElementById("consejo")
         .textContent =
         data.consejo ||
         "Cuidame mucho ❤️";
 
 
-    document.getElementById("mensaje")
+    /* MENSAJE */
+
+    document
+        .getElementById("mensaje")
         .textContent =
         data.mensaje ||
         "❤️";
 
 
-    /* ===========================
+    /* =================================================
        RIEGO
-    =========================== */
+    ================================================== */
 
     if (
         data.ultimo_riego &&
         data.frecuencia_riego
     ) {
+
 
         const proximo =
             calcularProximoRiego(
@@ -1339,29 +1728,48 @@ async function cargarMaceta() {
             );
 
 
-        document.getElementById(
-            "proximoRiego"
-        ).textContent =
+        document
+            .getElementById(
+                "proximoRiego"
+            )
+            .textContent =
             proximo.toLocaleDateString(
                 "es-AR",
                 {
+
                     day: "numeric",
+
                     month: "long"
+
                 }
             );
 
 
-        const hoy = new Date();
+        const hoy =
+            new Date();
 
-        hoy.setHours(0, 0, 0, 0);
 
-        proximo.setHours(0, 0, 0, 0);
+        hoy.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        proximo.setHours(
+            0,
+            0,
+            0,
+            0
+        );
 
 
         const diferencia =
             Math.ceil(
                 (
-                    proximo - hoy
+                    proximo -
+                    hoy
                 ) /
                 (
                     1000 *
@@ -1375,38 +1783,54 @@ async function cargarMaceta() {
         let textoEstado;
 
 
-        if (diferencia > 1) {
+        if (
+            diferencia > 1
+        ) {
+
 
             textoEstado =
                 `🟢 Faltan ${diferencia} días`;
 
+
         }
 
-        else if (diferencia === 1) {
+        else if (
+            diferencia === 1
+        ) {
+
 
             textoEstado =
                 "🟡 Mañana toca regar";
 
+
         }
 
-        else if (diferencia === 0) {
+        else if (
+            diferencia === 0
+        ) {
+
 
             textoEstado =
                 "🟠 Hoy toca regar";
+
 
         }
 
         else {
 
+
             textoEstado =
                 `🔴 Necesita agua hace ${Math.abs(diferencia)} días`;
+
 
         }
 
 
-        document.getElementById(
-            "estado"
-        ).textContent =
+        document
+            .getElementById(
+                "estado"
+            )
+            .textContent =
             textoEstado;
 
     }
@@ -1414,16 +1838,18 @@ async function cargarMaceta() {
 }
 
 
-/* ===========================
-   MOSTRAR INFORMACIÓN PLANTA
-=========================== */
+/* =====================================================
+   MOSTRAR INFORMACIÓN DE LA PLANTA
+===================================================== */
 
 function mostrarInfoPlanta() {
+
 
     const ficha =
         document.getElementById(
             "fichaPlanta"
         );
+
 
     const boton =
         document.getElementById(
@@ -1431,38 +1857,68 @@ function mostrarInfoPlanta() {
         );
 
 
-    ficha.classList.toggle("mostrar");
+    if (
+        !ficha ||
+        !boton
+    ) {
+
+
+        console.error(
+            "No se encontró la ficha o el botón."
+        );
+
+
+        return;
+
+    }
 
 
     if (
-        ficha.classList.contains("mostrar")
+        ficha.classList.contains(
+            "mostrar"
+        )
     ) {
+
+
+        ficha.classList.remove(
+            "mostrar"
+        );
+
+
+        boton.textContent =
+            "🌿 Información";
+
+
+    }
+
+    else {
+
+
+        ficha.classList.add(
+            "mostrar"
+        );
+
 
         boton.textContent =
             "✕ Cerrar";
 
     }
 
-    else {
-
-        boton.textContent =
-            "🌿 Información";
-
-    }
-
 }
 
 
-/* ===========================
+/* =====================================================
    DATOS CURIOSOS
-=========================== */
+===================================================== */
 
 function mostrarCuriosidades() {
+
 
     const contenido =
         document.getElementById(
             "curiosidades"
         );
+
 
     const boton =
         document.getElementById(
@@ -1481,12 +1937,15 @@ function mostrarCuriosidades() {
         )
     ) {
 
+
         boton.textContent =
             "🌿 Ocultar datos curiosos";
+
 
     }
 
     else {
+
 
         boton.textContent =
             "🌿 ¿Sabías que...?";
@@ -1496,11 +1955,12 @@ function mostrarCuriosidades() {
 }
 
 
-/* ===========================
+/* =====================================================
    MOSTRAR FORMULARIO
-=========================== */
+===================================================== */
 
 function mostrarFormulario() {
+
 
     const formulario =
         document.getElementById(
@@ -1509,30 +1969,41 @@ function mostrarFormulario() {
 
 
     formulario.style.display =
-        formulario.style.display === "block"
+        formulario.style.display ===
+        "block"
         ? "none"
         : "block";
 
 
-    document.getElementById(
-        "inputNombre"
-    ).value =
-        document.getElementById(
-            "nombre"
-        ).textContent;
+    document
+        .getElementById(
+            "inputNombre"
+        )
+        .value =
+        document
+            .getElementById(
+                "nombre"
+            )
+            .textContent;
 
 
-    document.getElementById(
-        "inputEspecie"
-    ).value =
-        document.getElementById(
-            "especie"
-        ).textContent;
+    document
+        .getElementById(
+            "inputEspecie"
+        )
+        .value =
+        document
+            .getElementById(
+                "especie"
+            )
+            .textContent;
 
 
-    document.getElementById(
-        "inputRiego"
-    ).value =
+    document
+        .getElementById(
+            "inputRiego"
+        )
+        .value =
         document
             .getElementById(
                 "frecuencia"
@@ -1548,132 +2019,163 @@ function mostrarFormulario() {
             );
 
 
-    /* CORRECCIÓN:
-       ahora recupera la fecha real */
-
-    document.getElementById(
-        "inputUltimoRiego"
-    ).value =
+    document
+        .getElementById(
+            "inputUltimoRiego"
+        )
+        .value =
         fechaUltimoRiego;
 
 
-    document.getElementById(
-        "inputLuz"
-    ).value =
-        document.getElementById(
-            "luz"
-        ).textContent;
+    document
+        .getElementById(
+            "inputLuz"
+        )
+        .value =
+        document
+            .getElementById(
+                "luz"
+            )
+            .textContent;
 
 
-    document.getElementById(
-        "inputConsejo"
-    ).value =
-        document.getElementById(
-            "consejo"
-        ).textContent;
+    document
+        .getElementById(
+            "inputConsejo"
+        )
+        .value =
+        document
+            .getElementById(
+                "consejo"
+            )
+            .textContent;
 
 
-    document.getElementById(
-        "inputMensaje"
-    ).value =
-        document.getElementById(
-            "mensaje"
-        ).textContent;
+    document
+        .getElementById(
+            "inputMensaje"
+        )
+        .value =
+        document
+            .getElementById(
+                "mensaje"
+            )
+            .textContent;
 
 }
 
 
-/* ===========================
+/* =====================================================
    GUARDAR DATOS
-=========================== */
+===================================================== */
 
 async function guardarDatos() {
 
+
     const nombre =
-        document.getElementById(
-            "inputNombre"
-        ).value;
+        document
+            .getElementById(
+                "inputNombre"
+            )
+            .value;
 
 
     const especie =
-        document.getElementById(
-            "inputEspecie"
-        ).value;
+        document
+            .getElementById(
+                "inputEspecie"
+            )
+            .value;
 
 
     const riego =
         Number(
-            document.getElementById(
-                "inputRiego"
-            ).value
+            document
+                .getElementById(
+                    "inputRiego"
+                )
+                .value
         );
 
 
     const ultimoRiego =
-        document.getElementById(
-            "inputUltimoRiego"
-        ).value;
+        document
+            .getElementById(
+                "inputUltimoRiego"
+            )
+            .value;
 
 
     const luz =
-        document.getElementById(
-            "inputLuz"
-        ).value;
+        document
+            .getElementById(
+                "inputLuz"
+            )
+            .value;
 
 
     const consejo =
-        document.getElementById(
-            "inputConsejo"
-        ).value;
+        document
+            .getElementById(
+                "inputConsejo"
+            )
+            .value;
 
 
     const mensaje =
-        document.getElementById(
-            "inputMensaje"
-        ).value;
+        document
+            .getElementById(
+                "inputMensaje"
+            )
+            .value;
 
 
     const {
         error
-    } = await supabaseClient
-        .from("macetas")
-        .update({
+    } =
+        await supabaseClient
+            .from("macetas")
+            .update({
 
-            nombre_planta:
-                nombre,
+                nombre_planta:
+                    nombre,
 
-            especie:
-                especie,
+                especie:
+                    especie,
 
-            frecuencia_riego:
-                riego,
+                frecuencia_riego:
+                    riego,
 
-            ultimo_riego:
-                ultimoRiego || null,
+                ultimo_riego:
+                    ultimoRiego ||
+                    null,
 
-            luz:
-                luz,
+                luz:
+                    luz,
 
-            consejo:
-                consejo,
+                consejo:
+                    consejo,
 
-            mensaje:
-                mensaje
+                mensaje:
+                    mensaje
 
-        })
-        .eq(
-            "id",
-            macetaID
-        );
+            })
+            .eq(
+                "id",
+                macetaID
+            );
 
 
     if (error) {
 
+
         console.error(error);
+
 
         alert(
             "Hubo un error al guardar 😢"
         );
+
 
         return;
 
@@ -1690,9 +2192,33 @@ async function guardarDatos() {
 }
 
 
-/* ===========================
+/* =====================================================
+   INICIAR BOTONES
+===================================================== */
+
+document
+    .getElementById(
+        "botonInfoPlanta"
+    )
+    .addEventListener(
+        "click",
+        mostrarInfoPlanta
+    );
+
+
+document
+    .getElementById(
+        "botonCuriosidades"
+    )
+    .addEventListener(
+        "click",
+        mostrarCuriosidades
+    );
+
+
+/* =====================================================
    INICIAR
-=========================== */
+===================================================== */
 
 cargarMaceta();
 
