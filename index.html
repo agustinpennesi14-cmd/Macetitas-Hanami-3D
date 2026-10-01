@@ -174,6 +174,8 @@ body {
 ---------------------------- */
 
 .card {
+    position: relative;
+
     background: rgba(255,255,255,0.78);
     backdrop-filter: blur(12px);
 
@@ -317,67 +319,156 @@ body {
 }
 
 /* ---------------------------
+   BOTÓN INFORMACIÓN PLANTA
+---------------------------- */
+
+.info-planta-btn {
+
+    position: absolute;
+
+    top: 22px;
+    right: 22px;
+
+    width: auto;
+
+    margin: 0;
+
+    padding: 9px 13px;
+
+    border-radius: 14px;
+
+    background: #e8efe3;
+
+    color: #486049;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    box-shadow: none;
+
+}
+
+.info-planta-btn:hover {
+
+    transform: none;
+
+    background: #dfe9d9;
+
+}
+
+/* ---------------------------
    FICHA DE LA PLANTA
 ---------------------------- */
 
 .ficha-planta {
-    margin-top: 28px;
+
+    display: none;
+
+    margin-top: 25px;
+
     padding-top: 5px;
+
+}
+
+.ficha-planta.mostrar {
+
+    display: block;
+
 }
 
 .planta-imagen {
+
     width: 100%;
+
     height: 220px;
+
     object-fit: cover;
+
     border-radius: 22px;
+
     display: block;
+
     margin-top: 15px;
+
     background: #eef3ea;
+
 }
 
 .planta-descripcion {
+
     margin-top: 15px;
+
     color: #596659;
+
     font-size: 14px;
+
     line-height: 1.6;
+
     text-align: left;
+
 }
 
 .datos-curiosos {
+
     margin-top: 15px;
+
     border-radius: 18px;
+
     overflow: hidden;
+
     background: #f4f7f0;
+
 }
 
 .datos-curiosos button {
+
     margin-top: 0;
+
     border-radius: 18px;
+
     background: #e8efe3;
+
     color: #486049;
+
     text-align: left;
+
     font-size: 14px;
+
 }
 
 .curiosidades-contenido {
+
     display: none;
+
     padding: 0 18px 18px;
+
     color: #596659;
+
     font-size: 14px;
+
     line-height: 1.6;
+
     text-align: left;
+
 }
 
 .curiosidades-contenido.mostrar {
+
     display: block;
+
 }
 
 .curiosidad {
+
     margin-top: 12px;
+
 }
 
 .curiosidad strong {
+
     color: #486049;
+
 }
 
 /* ---------------------------
@@ -636,6 +727,18 @@ label {
 
     <div class="card">
 
+        <!-- BOTÓN INFORMACIÓN -->
+
+        <button
+            type="button"
+            class="info-planta-btn"
+            onclick="mostrarInfoPlanta()"
+            id="botonInfoPlanta"
+        >
+            🌿 Información
+        </button>
+
+
         <!-- PLANTA -->
 
         <div class="planta">
@@ -656,7 +759,11 @@ label {
 
 
         <!-- FICHA DE LA PLANTA -->
-        <div class="ficha-planta">
+
+        <div
+            class="ficha-planta"
+            id="fichaPlanta"
+        >
 
             <div class="section-title">
                 🌵 Sobre tu suculenta
@@ -670,46 +777,87 @@ label {
             >
 
             <div class="planta-descripcion">
+
                 Las suculentas son plantas capaces de almacenar agua
                 en sus hojas, tallos o raíces. Por eso necesitan menos
                 riego que muchas otras plantas de interior.
+
             </div>
+
 
             <div class="cuidados">
 
                 <div class="cuidado">
-                    <div class="cuidado-icon">☀️</div>
-                    <div class="cuidado-titulo">Iluminación</div>
+
+                    <div class="cuidado-icon">
+                        ☀️
+                    </div>
+
+                    <div class="cuidado-titulo">
+                        Iluminación
+                    </div>
+
                     <div class="cuidado-dato">
                         Mucha luz natural
                     </div>
+
                 </div>
 
+
                 <div class="cuidado">
-                    <div class="cuidado-icon">💧</div>
-                    <div class="cuidado-titulo">Riego</div>
+
+                    <div class="cuidado-icon">
+                        💧
+                    </div>
+
+                    <div class="cuidado-titulo">
+                        Riego
+                    </div>
+
                     <div class="cuidado-dato">
                         Solo cuando el sustrato esté seco
                     </div>
+
                 </div>
 
+
                 <div class="cuidado">
-                    <div class="cuidado-icon">🌱</div>
-                    <div class="cuidado-titulo">Sustrato</div>
+
+                    <div class="cuidado-icon">
+                        🌱
+                    </div>
+
+                    <div class="cuidado-titulo">
+                        Sustrato
+                    </div>
+
                     <div class="cuidado-dato">
                         Suelto y con buen drenaje
                     </div>
+
                 </div>
 
+
                 <div class="cuidado">
-                    <div class="cuidado-icon">⭐</div>
-                    <div class="cuidado-titulo">Dificultad</div>
+
+                    <div class="cuidado-icon">
+                        ⭐
+                    </div>
+
+                    <div class="cuidado-titulo">
+                        Dificultad
+                    </div>
+
                     <div class="cuidado-dato">
                         Fácil
                     </div>
+
                 </div>
 
             </div>
+
+
+            <!-- DATOS CURIOSOS -->
 
             <div class="datos-curiosos">
 
@@ -721,33 +869,59 @@ label {
                     🌿 ¿Sabías que...?
                 </button>
 
+
                 <div
                     class="curiosidades-contenido"
                     id="curiosidades"
                 >
+
                     <div class="curiosidad">
-                        <strong>💧 Reservas de agua:</strong>
+
+                        <strong>
+                            💧 Reservas de agua:
+                        </strong>
+
                         muchas suculentas almacenan agua en sus tejidos
                         para soportar períodos de sequía.
+
                     </div>
 
+
                     <div class="curiosidad">
-                        <strong>☀️ El color puede cambiar:</strong>
+
+                        <strong>
+                            ☀️ El color puede cambiar:
+                        </strong>
+
                         algunas especies pueden modificar ligeramente
                         su color según la cantidad de luz que reciben.
+
                     </div>
 
+
                     <div class="curiosidad">
-                        <strong>🌱 No todas son iguales:</strong>
+
+                        <strong>
+                            🌱 No todas son iguales:
+                        </strong>
+
                         "suculenta" describe una adaptación para almacenar
                         agua; no se trata de una única familia de plantas.
+
                     </div>
 
+
                     <div class="curiosidad">
-                        <strong>🪴 Menos agua no significa abandono:</strong>
+
+                        <strong>
+                            🪴 Menos agua no significa abandono:
+                        </strong>
+
                         el exceso de agua suele ser más problemático que
                         dejar secar el sustrato entre riegos.
+
                     </div>
+
                 </div>
 
             </div>
@@ -885,7 +1059,7 @@ label {
         </div>
 
 
-        <!-- BOTON -->
+        <!-- BOTÓN CONFIGURACIÓN -->
 
         <button onclick="mostrarFormulario()">
 
@@ -1241,23 +1415,82 @@ async function cargarMaceta() {
 
 
 /* ===========================
+   MOSTRAR INFORMACIÓN PLANTA
+=========================== */
+
+function mostrarInfoPlanta() {
+
+    const ficha =
+        document.getElementById(
+            "fichaPlanta"
+        );
+
+    const boton =
+        document.getElementById(
+            "botonInfoPlanta"
+        );
+
+
+    ficha.classList.toggle("mostrar");
+
+
+    if (
+        ficha.classList.contains("mostrar")
+    ) {
+
+        boton.textContent =
+            "✕ Cerrar";
+
+    }
+
+    else {
+
+        boton.textContent =
+            "🌿 Información";
+
+    }
+
+}
+
+
+/* ===========================
    DATOS CURIOSOS
 =========================== */
 
 function mostrarCuriosidades() {
 
     const contenido =
-        document.getElementById("curiosidades");
+        document.getElementById(
+            "curiosidades"
+        );
 
     const boton =
-        document.getElementById("botonCuriosidades");
+        document.getElementById(
+            "botonCuriosidades"
+        );
 
-    contenido.classList.toggle("mostrar");
 
-    if (contenido.classList.contains("mostrar")) {
-        boton.textContent = "🌿 Ocultar datos curiosos";
-    } else {
-        boton.textContent = "🌿 ¿Sabías que...?";
+    contenido.classList.toggle(
+        "mostrar"
+    );
+
+
+    if (
+        contenido.classList.contains(
+            "mostrar"
+        )
+    ) {
+
+        boton.textContent =
+            "🌿 Ocultar datos curiosos";
+
+    }
+
+    else {
+
+        boton.textContent =
+            "🌿 ¿Sabías que...?";
+
     }
 
 }
