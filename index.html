@@ -1,1296 +1,1702 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Hanami 3D 🌱</title>
-
-    <!-- SUPABASE -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #edf4e8, #f8f5ed);
-            color: #405044;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* =========================
-           PÉTALOS
-        ========================= */
-
-        .petal {
-            position: fixed;
-            top: -20px;
-            width: 10px;
-            height: 14px;
-            background: #f2b8c6;
-            border-radius: 80% 20% 80% 20%;
-            opacity: 0.6;
-            animation: caer linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes caer {
-            0% {
-                transform: translateY(-20px) rotate(0deg);
-            }
-
-            100% {
-                transform: translateY(110vh) rotate(360deg);
-            }
-        }
-
-        /* =========================
-           INTRO
-        ========================= */
-
-        #intro {
-            position: fixed;
-            inset: 0;
-            background: #edf4e8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            animation: desaparecer 2.5s forwards;
-        }
-
-        #intro h1 {
-            color: #486049;
-            font-size: 38px;
-            letter-spacing: 2px;
-        }
-
-        @keyframes desaparecer {
-            0% {
-                opacity: 1;
-            }
-
-            75% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0;
-                visibility: hidden;
-            }
-        }
-
-        /* =========================
-           CONTENEDOR
-        ========================= */
-
-        .container {
-            width: 100%;
-            max-width: 650px;
-            margin: auto;
-            padding: 25px 15px 40px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .brand {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .brand h1 {
-            margin: 0;
-            color: #486049;
-            font-size: 28px;
-        }
-
-        .brand p {
-            margin: 5px 0 0;
-            color: #7a8878;
-            font-size: 13px;
-        }
-
-        /* =========================
-           TARJETA PRINCIPAL
-        ========================= */
-
-        .card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 28px;
-            padding: 30px 22px;
-            box-shadow: 0 15px 40px rgba(70, 90, 70, 0.12);
-            margin-bottom: 18px;
-        }
-
-        .plant-icon {
-            font-size: 65px;
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        #nombre {
-            text-align: center;
-            margin: 10px 0 4px;
-            color: #486049;
-            font-size: 27px;
-        }
-
-        #especie {
-            text-align: center;
-            color: #849083;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        /* =========================
-           BOTÓN INFORMACIÓN
-        ========================= */
-
-        .info-details {
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            z-index: 10;
-        }
-
-        .info-details summary {
-            list-style: none;
-            cursor: pointer;
-            background: #e8efe3;
-            color: #486049;
-            padding: 9px 13px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: bold;
-            user-select: none;
-        }
-
-        .info-details summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .info-details summary:hover {
-            background: #dce8d6;
-        }
-
-        .info-details[open] summary {
-            background: #dce8d6;
-        }
-
-        /* =========================
-           FICHA DE LA PLANTA
-        ========================= */
-
-        .ficha-planta {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e9df;
-        }
-
-        .ficha-planta h2 {
-            color: #486049;
-            font-size: 22px;
-            margin-top: 0;
-        }
-
-        .imagen-planta {
-            width: 100%;
-            max-width: 400px;
-            display: block;
-            margin: 15px auto 20px;
-            border-radius: 20px;
-        }
-
-        .descripcion-planta {
-            color: #667364;
-            font-size: 14px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        /* =========================
-           TARJETAS DE CUIDADOS
-        ========================= */
-
-        .cuidados-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 15px;
-        }
-
-        .cuidado {
-            background: #f5f8f2;
-            border-radius: 18px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .cuidado .emoji {
-            font-size: 25px;
-            margin-bottom: 7px;
-        }
-
-        .cuidado strong {
-            display: block;
-            color: #486049;
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-
-        .cuidado span {
-            color: #788477;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        /* =========================
-           CURIOSIDADES
-        ========================= */
-
-        .curiosidades-details {
-            margin-top: 18px;
-        }
-
-        .curiosidades-details summary {
-            cursor: pointer;
-            background: #edf3e9;
-            color: #486049;
-            padding: 14px;
-            border-radius: 16px;
-            font-weight: bold;
-            font-size: 13px;
-            user-select: none;
-            list-style: none;
-        }
-
-        .curiosidades-details summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .curiosidades {
-            margin-top: 12px;
-            background: #f8faf6;
-            padding: 15px;
-            border-radius: 16px;
-        }
-
-        .curiosidades p {
-            color: #697568;
-            font-size: 13px;
-            line-height: 1.6;
-            margin: 10px 0;
-        }
-
-        /* =========================
-           DATOS DE CUIDADO
-        ========================= */
-
-        .seccion-titulo {
-            color: #486049;
-            font-size: 18px;
-            margin: 25px 0 12px;
-        }
-
-        .care-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .care-card {
-            background: #f5f8f2;
-            padding: 17px;
-            border-radius: 18px;
-        }
-
-        .care-card .emoji {
-            font-size: 25px;
-        }
-
-        .care-card strong {
-            display: block;
-            color: #486049;
-            font-size: 13px;
-            margin-top: 7px;
-        }
-
-        .care-card span {
-            color: #788477;
-            font-size: 12px;
-        }
-
-        /* =========================
-           ESTADO DE RIEGO
-        ========================= */
-
-        #estadoRiego {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 16px;
-            background: #f3f7f0;
-            text-align: center;
-            font-weight: bold;
-            color: #486049;
-        }
-
-        /* =========================
-           CONSEJO
-        ========================= */
-
-        .consejo {
-            margin-top: 20px;
-            padding: 18px;
-            background: #fff8e8;
-            border-radius: 18px;
-            color: #74694d;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .consejo strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        /* =========================
-           MENSAJE
-        ========================= */
-
-        .mensaje {
-            margin-top: 15px;
-            padding: 18px;
-            background: #f9edf1;
-            border-radius: 18px;
-            color: #765764;
-            font-size: 13px;
-            line-height: 1.6;
-            text-align: center;
-        }
-
-        /* =========================
-           CONFIGURACIÓN
-        ========================= */
-
-        .config-button {
-            width: 100%;
-            margin-top: 20px;
-            border: none;
-            background: #dfe9d9;
-            color: #486049;
-            padding: 14px;
-            border-radius: 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .formulario {
-            display: none;
-            margin-top: 15px;
-            padding: 18px;
-            background: #f5f8f2;
-            border-radius: 18px;
-        }
-
-        .formulario.mostrar {
-            display: block;
-        }
-
-        .formulario label {
-            display: block;
-            margin-top: 12px;
-            margin-bottom: 5px;
-            font-size: 12px;
-            color: #596557;
-            font-weight: bold;
-        }
-
-        .formulario input,
-        .formulario textarea {
-            width: 100%;
-            border: 1px solid #d8e0d4;
-            border-radius: 10px;
-            padding: 10px;
-            font-family: inherit;
-            background: white;
-        }
-
-        .formulario textarea {
-            min-height: 70px;
-            resize: vertical;
-        }
-
-        .guardar {
-            width: 100%;
-            margin-top: 15px;
-            border: none;
-            background: #78936f;
-            color: white;
-            padding: 13px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* =========================
-           FOOTER
-        ========================= */
-
-        footer {
-            text-align: center;
-            color: #8b9588;
-            font-size: 11px;
-            margin-top: 20px;
-        }
-
-        /* =========================
-           CELULAR
-        ========================= */
-
-        @media (max-width: 500px) {
-
-            .container {
-                padding: 18px 10px 30px;
-            }
-
-            .card {
-                padding: 25px 16px;
-                border-radius: 23px;
-            }
-
-            .cuidados-grid,
-            .care-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .info-details {
-                top: 15px;
-                right: 15px;
-            }
-
-            .info-details summary {
-                font-size: 11px;
-                padding: 8px 10px;
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hanami 3D 🌸</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, #fff4f7, transparent 40%),
+        linear-gradient(135deg, #f8f1e7, #e8f2e5);
+
+    min-height: 100vh;
+    color: #354235;
+    overflow-x: hidden;
+}
+
+/* ---------------------------
+   PÉTALOS
+---------------------------- */
+
+.petalo {
+    position: fixed;
+    width: 14px;
+    height: 20px;
+    background: #f3a9bd;
+    border-radius: 100% 0 100% 0;
+    opacity: 0.5;
+    animation: caer linear infinite;
+    pointer-events: none;
+}
+
+.petalo:nth-child(1) {
+    left: 10%;
+    animation-duration: 8s;
+}
+
+.petalo:nth-child(2) {
+    left: 30%;
+    animation-duration: 11s;
+    animation-delay: 2s;
+}
+
+.petalo:nth-child(3) {
+    left: 60%;
+    animation-duration: 9s;
+    animation-delay: 1s;
+}
+
+.petalo:nth-child(4) {
+    left: 85%;
+    animation-duration: 12s;
+    animation-delay: 3s;
+}
+
+@keyframes caer {
+
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+    }
+
+}
+
+/* ---------------------------
+   INTRO
+---------------------------- */
+
+.intro {
+    position: fixed;
+    inset: 0;
+    background: #f8f1e7;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+
+    animation: introSalida 1.2s ease forwards;
+    animation-delay: 2.2s;
+}
+
+.intro-contenido {
+    text-align: center;
+    animation: aparecer 1s ease;
+}
+
+.intro-logo {
+    font-size: 60px;
+}
+
+.intro h1 {
+    margin: 10px 0;
+    color: #3c5941;
+}
+
+.intro p {
+    color: #777;
+}
+
+@keyframes aparecer {
+
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+@keyframes introSalida {
+
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+}
+
+/* ---------------------------
+   CONTENEDOR
+---------------------------- */
+
+.container {
+    width: 92%;
+    max-width: 520px;
+    margin: auto;
+    padding: 35px 0;
+}
+
+/* ---------------------------
+   MARCA
+---------------------------- */
+
+.brand {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.brand-title {
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: #687d68;
+    font-weight: bold;
+}
+
+.brand-subtitle {
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 2px;
+}
+
+/* ---------------------------
+   CARD PRINCIPAL
+---------------------------- */
+
+.card {
+    position: relative;
+
+    background: rgba(255,255,255,0.78);
+    backdrop-filter: blur(12px);
+
+    border-radius: 30px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 20px 50px rgba(70,80,60,0.15);
+
+    animation: subir 0.8s ease;
+}
+
+@keyframes subir {
+
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* ---------------------------
+   PLANTA
+---------------------------- */
+
+.planta {
+    text-align: center;
+}
+
+.planta-icon {
+    font-size: 75px;
+
+    animation:
+        flotar 3s ease-in-out infinite;
+}
+
+@keyframes flotar {
+
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+}
+
+.planta h1 {
+    margin: 5px 0;
+
+    color: #344d38;
+
+    font-size: 32px;
+}
+
+.especie {
+    color: #789078;
+
+    font-style: italic;
+
+    font-size: 16px;
+}
+
+/* ---------------------------
+   TITULO SECCION
+---------------------------- */
+
+.section-title {
+
+    margin-top: 28px;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+
+    color: #6d7f6c;
+
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+}
+
+/* ---------------------------
+   CUIDADOS
+---------------------------- */
+
+.cuidados {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    margin-top: 15px;
+
+}
+
+.cuidado {
+
+    background: #f7f4ec;
+
+    border-radius: 18px;
+
+    padding: 16px;
+
+}
+
+.cuidado-icon {
+
+    font-size: 24px;
+
+}
+
+.cuidado-titulo {
+
+    font-size: 12px;
+
+    color: #8b9588;
+
+    margin-top: 7px;
+
+}
+
+.cuidado-dato {
+
+    font-weight: bold;
+
+    margin-top: 4px;
+
+    font-size: 14px;
+
+}
+
+/* ---------------------------
+   BOTÓN INFORMACIÓN PLANTA
+---------------------------- */
+
+.info-planta-btn {
+
+    position: absolute;
+
+    top: 22px;
+    right: 22px;
+
+    width: auto;
+
+    margin: 0;
+
+    padding: 9px 13px;
+
+    border-radius: 14px;
+
+    background: #e8efe3;
+
+    color: #486049;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    box-shadow: none;
+
+}
+
+.info-planta-btn:hover {
+
+    transform: none;
+
+    background: #dfe9d9;
+
+}
+
+/* ---------------------------
+   FICHA DE LA PLANTA
+---------------------------- */
+
+.ficha-planta {
+
+    display: none;
+
+    margin-top: 25px;
+
+    padding-top: 5px;
+
+}
+
+.ficha-planta.mostrar {
+
+    display: block;
+
+}
+
+.planta-imagen {
+
+    width: 100%;
+
+    height: 220px;
+
+    object-fit: cover;
+
+    border-radius: 22px;
+
+    display: block;
+
+    margin-top: 15px;
+
+    background: #eef3ea;
+
+}
+
+.planta-descripcion {
+
+    margin-top: 15px;
+
+    color: #596659;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    text-align: left;
+
+}
+
+.datos-curiosos {
+
+    margin-top: 15px;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    background: #f4f7f0;
+
+}
+
+.datos-curiosos button {
+
+    margin-top: 0;
+
+    border-radius: 18px;
+
+    background: #e8efe3;
+
+    color: #486049;
+
+    text-align: left;
+
+    font-size: 14px;
+
+}
+
+.curiosidades-contenido {
+
+    display: none;
+
+    padding: 0 18px 18px;
+
+    color: #596659;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    text-align: left;
+
+}
+
+.curiosidades-contenido.mostrar {
+
+    display: block;
+
+}
+
+.curiosidad {
+
+    margin-top: 12px;
+
+}
+
+.curiosidad strong {
+
+    color: #486049;
+
+}
+
+/* ---------------------------
+   RIEGO
+---------------------------- */
+
+.riego {
+
+    margin-top: 15px;
+
+    padding: 18px;
+
+    border-radius: 20px;
+
+    background: linear-gradient(
+        135deg,
+        #e7f4ea,
+        #f4f8ed
+    );
+
+}
+
+.riego-titulo {
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+
+}
+
+#estado {
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+}
+
+#proximoRiego {
+
+    margin-top: 7px;
+
+    font-size: 14px;
+
+}
+
+/* ---------------------------
+   CONSEJO
+---------------------------- */
+
+.consejo {
+
+    margin-top: 15px;
+
+    background: #fff8e9;
+
+    border-radius: 20px;
+
+    padding: 18px;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+}
+
+/* ---------------------------
+   MENSAJE
+---------------------------- */
+
+.mensaje {
+
+    margin-top: 20px;
+
+    padding: 22px;
+
+    border-radius: 22px;
+
+    background: linear-gradient(
+        135deg,
+        #ffe9ef,
+        #fff3f5
+    );
+
+    text-align: center;
+
+}
+
+.mensaje-titulo {
+
+    font-size: 13px;
+
+    letter-spacing: 1px;
+
+    color: #a65f76;
+
+    font-weight: bold;
+
+}
+
+#mensaje {
+
+    margin-top: 10px;
+
+    font-size: 17px;
+
+    font-style: italic;
+
+    line-height: 1.5;
+
+}
+
+/* ---------------------------
+   BOTON
+---------------------------- */
+
+button {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 18px;
+
+    background: #526d54;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+button:hover {
+
+    transform: translateY(-2px);
+
+}
+
+/* ---------------------------
+   FORMULARIO
+---------------------------- */
+
+#formulario {
+
+    display: none;
+
+    margin-top: 25px;
+
+}
+
+input {
+
+    width: 100%;
+
+    padding: 13px;
+
+    margin-top: 6px;
+
+    margin-bottom: 15px;
+
+    border-radius: 12px;
+
+    border: 1px solid #ddd;
+
+    font-size: 14px;
+
+}
+
+label {
+
+    font-size: 12px;
+
+    color: #687568;
+
+    font-weight: bold;
+
+}
+
+/* ---------------------------
+   FOOTER
+---------------------------- */
+
+.footer {
+
+    text-align: center;
+
+    margin-top: 25px;
+
+    font-size: 11px;
+
+    color: #999;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-    <!-- =========================
-         INTRO
-    ========================= -->
+<!-- PÉTALOS -->
 
-    <div id="intro">
-        <h1>Hanami 3D 🌱</h1>
-    </div>
+<div class="petalo"></div>
+<div class="petalo"></div>
+<div class="petalo"></div>
+<div class="petalo"></div>
 
-    <!-- PÉTALOS -->
 
-    <div class="petal" style="left:10%; animation-duration:8s;"></div>
-    <div class="petal" style="left:25%; animation-duration:11s;"></div>
-    <div class="petal" style="left:40%; animation-duration:9s;"></div>
-    <div class="petal" style="left:60%; animation-duration:12s;"></div>
-    <div class="petal" style="left:75%; animation-duration:10s;"></div>
-    <div class="petal" style="left:90%; animation-duration:13s;"></div>
+<!-- INTRO -->
 
-    <div class="container">
+<div class="intro">
 
-        <!-- =========================
-             MARCA
-        ========================= -->
+    <div class="intro-contenido">
 
-        <div class="brand">
-            <h1>Hanami 3D 🌸</h1>
-            <p>Una pequeña historia que crece con vos</p>
+        <div class="intro-logo">
+            🌸🌱
         </div>
 
-        <!-- =========================
-             TARJETA PRINCIPAL
-        ========================= -->
+        <h1>Hanami 3D</h1>
 
-        <div class="card">
+        <p>
+            Una pequeña plantita para vos
+        </p>
 
-            <!-- BOTÓN INFORMACIÓN
-                 NO USA JAVASCRIPT -->
+    </div>
 
-            <details class="info-details">
-
-                <summary>
-                    🌿 Información
-                </summary>
-
-                <div class="ficha-planta">
-
-                    <h2>🌵 Sobre tu suculenta</h2>
-
-                    <img
-                        src="imagenes/suculenta.jpg"
-                        alt="Suculenta"
-                        class="imagen-planta"
-                    >
-
-                    <p class="descripcion-planta">
-                        Las suculentas son plantas adaptadas para almacenar
-                        agua en sus hojas, tallos o raíces. Son resistentes
-                        y requieren relativamente pocos cuidados, por lo que
-                        son una excelente opción para comenzar a cultivar.
-                    </p>
-
-                    <div class="cuidados-grid">
-
-                        <div class="cuidado">
-                            <div class="emoji">☀️</div>
-                            <strong>Iluminación</strong>
-                            <span>
-                                Mucha luz natural.
-                                Preferentemente luz indirecta
-                                o sol suave.
-                            </span>
-                        </div>
-
-                        <div class="cuidado">
-                            <div class="emoji">💧</div>
-                            <strong>Riego</strong>
-                            <span>
-                                Regá solamente cuando
-                                el sustrato esté completamente seco.
-                            </span>
-                        </div>
-
-                        <div class="cuidado">
-                            <div class="emoji">🌱</div>
-                            <strong>Sustrato</strong>
-                            <span>
-                                Necesita un sustrato
-                                con buen drenaje para evitar
-                                acumulación de agua.
-                            </span>
-                        </div>
-
-                        <div class="cuidado">
-                            <div class="emoji">💚</div>
-                            <strong>Dificultad</strong>
-                            <span>
-                                Fácil de cuidar.
-                                Ideal para principiantes.
-                            </span>
-                        </div>
-
-                    </div>
-
-                    <details class="curiosidades-details">
-
-                        <summary>
-                            🌿 ¿Sabías que...?
-                        </summary>
-
-                        <div class="curiosidades">
-
-                            <p>
-                                🌵 Las suculentas pueden almacenar
-                                agua durante largos períodos.
-                            </p>
-
-                            <p>
-                                ☀️ Muchas especies necesitan
-                                bastante luz para mantener
-                                un crecimiento saludable.
-                            </p>
-
-                            <p>
-                                💧 Regarlas demasiado puede ser
-                                más perjudicial que dejarlas
-                                unos días sin agua.
-                            </p>
-
-                            <p>
-                                🌱 Existen miles de especies
-                                diferentes de suculentas,
-                                con formas y colores muy variados.
-                            </p>
-
-                        </div>
-
-                    </details>
-
-                </div>
-
-            </details>
+</div>
 
 
-            <!-- =========================
-                 PLANTA
-            ========================= -->
+<!-- CONTENIDO -->
 
-            <div class="plant-icon">
+<div class="container">
+
+    <div class="brand">
+
+        <div class="brand-title">
+            HANAMI 3D
+        </div>
+
+        <div class="brand-subtitle">
+            HECHO CON CARIÑO 🌸
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <!-- BOTÓN INFORMACIÓN -->
+
+        <button
+            type="button"
+            class="info-planta-btn"
+            onclick="mostrarInfoPlanta()"
+            id="botonInfoPlanta"
+        >
+            🌿 Información
+        </button>
+
+
+        <!-- PLANTA -->
+
+        <div class="planta">
+
+            <div class="planta-icon">
                 🌱
             </div>
 
-            <h2 id="nombre">
-                Mi plantita
-            </h2>
+            <h1 id="nombre">
+                Cargando...
+            </h1>
 
-            <div id="especie">
-                Una plantita 🌱
+            <div class="especie" id="especie">
+                ...
             </div>
 
+        </div>
 
-            <!-- =========================
-                 DATOS DE CUIDADO
-            ========================= -->
 
-            <h3 class="seccion-titulo">
-                💚 Cuidados
-            </h3>
+        <!-- FICHA DE LA PLANTA -->
 
-            <div class="care-grid">
+        <div
+            class="ficha-planta"
+            id="fichaPlanta"
+        >
 
-                <div class="care-card">
-                    <div class="emoji">💧</div>
-                    <strong>Riego</strong>
-                    <span id="frecuencia">
-                        Sin registrar
-                    </span>
-                </div>
-
-                <div class="care-card">
-                    <div class="emoji">☀️</div>
-                    <strong>Luz</strong>
-                    <span id="luz">
-                        Sin registrar
-                    </span>
-                </div>
-
-                <div class="care-card">
-                    <div class="emoji">📅</div>
-                    <strong>Último riego</strong>
-                    <span id="ultimoRiego">
-                        Sin registrar
-                    </span>
-                </div>
-
-                <div class="care-card">
-                    <div class="emoji">🌱</div>
-                    <strong>Próximo riego</strong>
-                    <span id="proximoRiego">
-                        Calculando...
-                    </span>
-                </div>
-
+            <div class="section-title">
+                🌵 Sobre tu suculenta
             </div>
 
-
-            <!-- =========================
-                 ESTADO
-            ========================= -->
-
-            <div id="estadoRiego">
-                💧 Calculando estado del riego...
-            </div>
-
-
-            <!-- =========================
-                 CONSEJO
-            ========================= -->
-
-            <div class="consejo">
-
-                <strong>
-                    💡 Consejo
-                </strong>
-
-                <span id="consejo">
-                    Cuidame mucho ❤️
-                </span>
-
-            </div>
-
-
-            <!-- =========================
-                 MENSAJE PERSONAL
-            ========================= -->
-
-            <div class="mensaje">
-
-                <span id="mensaje">
-                    ❤️
-                </span>
-
-            </div>
-
-
-            <!-- =========================
-                 CONFIGURACIÓN
-            ========================= -->
-
-            <button
-                type="button"
-                class="config-button"
-                onclick="mostrarFormulario()"
-            >
-                ⚙️ Configurar maceta
-            </button>
-
-            <div
-                class="formulario"
-                id="formulario"
+            <img
+                class="planta-imagen"
+                src="imagenes/suculenta.jpg"
+                alt="Suculenta"
+                loading="lazy"
             >
 
-                <label>
-                    Nombre de la planta
-                </label>
+            <div class="planta-descripcion">
 
-                <input
-                    type="text"
-                    id="inputNombre"
-                >
+                Las suculentas son plantas capaces de almacenar agua
+                en sus hojas, tallos o raíces. Por eso necesitan menos
+                riego que muchas otras plantas de interior.
 
-
-                <label>
-                    Especie
-                </label>
-
-                <input
-                    type="text"
-                    id="inputEspecie"
-                >
+            </div>
 
 
-                <label>
-                    Frecuencia de riego (días)
-                </label>
+            <div class="cuidados">
 
-                <input
-                    type="number"
-                    id="inputFrecuencia"
-                >
+                <div class="cuidado">
 
+                    <div class="cuidado-icon">
+                        ☀️
+                    </div>
 
-                <label>
-                    Último riego
-                </label>
+                    <div class="cuidado-titulo">
+                        Iluminación
+                    </div>
 
-                <input
-                    type="date"
-                    id="inputUltimoRiego"
-                >
+                    <div class="cuidado-dato">
+                        Mucha luz natural
+                    </div>
 
-
-                <label>
-                    Luz
-                </label>
-
-                <input
-                    type="text"
-                    id="inputLuz"
-                >
+                </div>
 
 
-                <label>
-                    Consejo
-                </label>
+                <div class="cuidado">
 
-                <textarea
-                    id="inputConsejo"
-                ></textarea>
+                    <div class="cuidado-icon">
+                        💧
+                    </div>
+
+                    <div class="cuidado-titulo">
+                        Riego
+                    </div>
+
+                    <div class="cuidado-dato">
+                        Solo cuando el sustrato esté seco
+                    </div>
+
+                </div>
 
 
-                <label>
-                    Mensaje
-                </label>
+                <div class="cuidado">
 
-                <textarea
-                    id="inputMensaje"
-                ></textarea>
+                    <div class="cuidado-icon">
+                        🌱
+                    </div>
 
+                    <div class="cuidado-titulo">
+                        Sustrato
+                    </div>
+
+                    <div class="cuidado-dato">
+                        Suelto y con buen drenaje
+                    </div>
+
+                </div>
+
+
+                <div class="cuidado">
+
+                    <div class="cuidado-icon">
+                        ⭐
+                    </div>
+
+                    <div class="cuidado-titulo">
+                        Dificultad
+                    </div>
+
+                    <div class="cuidado-dato">
+                        Fácil
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DATOS CURIOSOS -->
+
+            <div class="datos-curiosos">
 
                 <button
                     type="button"
-                    class="guardar"
-                    onclick="guardarDatos()"
+                    onclick="mostrarCuriosidades()"
+                    id="botonCuriosidades"
                 >
-                    💾 Guardar cambios
+                    🌿 ¿Sabías que...?
                 </button>
+
+
+                <div
+                    class="curiosidades-contenido"
+                    id="curiosidades"
+                >
+
+                    <div class="curiosidad">
+
+                        <strong>
+                            💧 Reservas de agua:
+                        </strong>
+
+                        muchas suculentas almacenan agua en sus tejidos
+                        para soportar períodos de sequía.
+
+                    </div>
+
+
+                    <div class="curiosidad">
+
+                        <strong>
+                            ☀️ El color puede cambiar:
+                        </strong>
+
+                        algunas especies pueden modificar ligeramente
+                        su color según la cantidad de luz que reciben.
+
+                    </div>
+
+
+                    <div class="curiosidad">
+
+                        <strong>
+                            🌱 No todas son iguales:
+                        </strong>
+
+                        "suculenta" describe una adaptación para almacenar
+                        agua; no se trata de una única familia de plantas.
+
+                    </div>
+
+
+                    <div class="curiosidad">
+
+                        <strong>
+                            🪴 Menos agua no significa abandono:
+                        </strong>
+
+                        el exceso de agua suele ser más problemático que
+                        dejar secar el sustrato entre riegos.
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
 
-        <footer>
-            Hanami 3D 🌸<br>
-            Hecho con cariño en Mendoza 🇦🇷
-        </footer>
+        <!-- CUIDADOS -->
+
+        <div class="section-title">
+            🌿 Conocé a tu plantita
+        </div>
+
+
+        <div class="cuidados">
+
+            <div class="cuidado">
+
+                <div class="cuidado-icon">
+                    💧
+                </div>
+
+                <div class="cuidado-titulo">
+                    Riego
+                </div>
+
+                <div
+                    class="cuidado-dato"
+                    id="frecuencia">
+                    ...
+                </div>
+
+            </div>
+
+
+            <div class="cuidado">
+
+                <div class="cuidado-icon">
+                    ☀️
+                </div>
+
+                <div class="cuidado-titulo">
+                    Luz
+                </div>
+
+                <div
+                    class="cuidado-dato"
+                    id="luz">
+                    ...
+                </div>
+
+            </div>
+
+
+            <div class="cuidado">
+
+                <div class="cuidado-icon">
+                    🌱
+                </div>
+
+                <div class="cuidado-titulo">
+                    Último riego
+                </div>
+
+                <div
+                    class="cuidado-dato"
+                    id="ultimoRiego">
+                    ...
+                </div>
+
+            </div>
+
+
+            <div class="cuidado">
+
+                <div class="cuidado-icon">
+                    📅
+                </div>
+
+                <div class="cuidado-titulo">
+                    Próximo riego
+                </div>
+
+                <div
+                    class="cuidado-dato"
+                    id="proximoRiego">
+                    ...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ESTADO DE RIEGO -->
+
+        <div class="riego">
+
+            <div class="riego-titulo">
+                💧 Estado de mi riego
+            </div>
+
+            <div id="estado">
+                Calculando...
+            </div>
+
+        </div>
+
+
+        <!-- CONSEJO -->
+
+        <div class="consejo">
+
+            🌿 <strong>Consejito:</strong>
+
+            <div id="consejo">
+                ...
+            </div>
+
+        </div>
+
+
+        <!-- MENSAJE -->
+
+        <div class="mensaje">
+
+            <div class="mensaje-titulo">
+                💌 UN MENSAJE PARA VOS
+            </div>
+
+            <div id="mensaje">
+                ...
+            </div>
+
+        </div>
+
+
+        <!-- BOTÓN CONFIGURACIÓN -->
+
+        <button onclick="mostrarFormulario()">
+
+            ⚙️ Configurar mi plantita
+
+        </button>
+
+
+        <!-- FORMULARIO -->
+
+        <div id="formulario">
+
+            <label>
+                Nombre de la planta
+            </label>
+
+            <input
+                id="inputNombre"
+                type="text">
+
+
+            <label>
+                Especie
+            </label>
+
+            <input
+                id="inputEspecie"
+                type="text">
+
+
+            <label>
+                Frecuencia de riego (días)
+            </label>
+
+            <input
+                id="inputRiego"
+                type="number">
+
+
+            <label>
+                Último riego
+            </label>
+
+            <input
+                id="inputUltimoRiego"
+                type="date">
+
+
+            <label>
+                Luz
+            </label>
+
+            <input
+                id="inputLuz"
+                type="text">
+
+
+            <label>
+                Consejo
+            </label>
+
+            <input
+                id="inputConsejo"
+                type="text">
+
+
+            <label>
+                Mensaje
+            </label>
+
+            <input
+                id="inputMensaje"
+                type="text">
+
+
+            <button onclick="guardarDatos()">
+
+                💾 Guardar cambios
+
+            </button>
+
+        </div>
 
     </div>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================= -->
+    <div class="footer">
 
-    <script>
+        Diseñado y fabricado por Hanami 3D 🌸
 
-        /* =========================================
-           SUPABASE
-        ========================================= */
+    </div>
 
-        const SUPABASE_URL =
-            "https://mdcgmuxwckeeqqjjuvyw.supabase.co";
+</div>
 
-        const SUPABASE_KEY =
-            "sb_publishable_0x8huqPAlxgShTq8qI8EgA__wJE62qm";
 
-        const supabaseClient =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_KEY
+<script>
+
+/* ===========================
+   SUPABASE
+=========================== */
+
+const SUPABASE_URL =
+    "https://mdcgmuxwckeeqqjjuvyw.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_0x8huqPAlxgShTq8qI8EgA__wJE62qm";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* ===========================
+   ID DE LA MACETA
+=========================== */
+
+const parametros =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const macetaID =
+    parametros.get("id") || "001";
+
+
+/* ===========================
+   VARIABLE PARA ÚLTIMO RIEGO
+=========================== */
+
+let fechaUltimoRiego = "";
+
+
+/* ===========================
+   FORMATEAR FECHA
+=========================== */
+
+function formatearFecha(fecha) {
+
+    if (!fecha) return "Sin registrar";
+
+    const partes = fecha.split("-");
+
+    const fechaLocal = new Date(
+        partes[0],
+        partes[1] - 1,
+        partes[2]
+    );
+
+    return fechaLocal.toLocaleDateString(
+        "es-AR",
+        {
+            day: "numeric",
+            month: "long"
+        }
+    );
+
+}
+
+
+/* ===========================
+   CALCULAR PRÓXIMO RIEGO
+=========================== */
+
+function calcularProximoRiego(
+    fecha,
+    dias
+) {
+
+    const partes = fecha.split("-");
+
+    const resultado = new Date(
+        partes[0],
+        partes[1] - 1,
+        partes[2]
+    );
+
+    resultado.setDate(
+        resultado.getDate() + Number(dias)
+    );
+
+    return resultado;
+
+}
+
+
+/* ===========================
+   CARGAR MACETA
+=========================== */
+
+async function cargarMaceta() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("macetas")
+        .select("*")
+        .eq("id", macetaID)
+        .single();
+
+
+    if (error) {
+
+        console.error(error);
+
+        document.getElementById("nombre")
+            .textContent =
+            "No encontramos esta maceta 🌱";
+
+        return;
+
+    }
+
+
+    /* Guardamos la fecha original */
+
+    fechaUltimoRiego =
+        data.ultimo_riego || "";
+
+
+    /* DATOS PRINCIPALES */
+
+    document.getElementById("nombre")
+        .textContent =
+        data.nombre_planta || "Mi plantita";
+
+
+    document.getElementById("especie")
+        .textContent =
+        data.especie || "Una plantita 🌱";
+
+
+    document.getElementById("frecuencia")
+        .textContent =
+        `Cada ${data.frecuencia_riego} días`;
+
+
+    document.getElementById("luz")
+        .textContent =
+        data.luz || "Sin registrar";
+
+
+    document.getElementById("ultimoRiego")
+        .textContent =
+        formatearFecha(
+            data.ultimo_riego
+        );
+
+
+    document.getElementById("consejo")
+        .textContent =
+        data.consejo ||
+        "Cuidame mucho ❤️";
+
+
+    document.getElementById("mensaje")
+        .textContent =
+        data.mensaje ||
+        "❤️";
+
+
+    /* ===========================
+       RIEGO
+    =========================== */
+
+    if (
+        data.ultimo_riego &&
+        data.frecuencia_riego
+    ) {
+
+        const proximo =
+            calcularProximoRiego(
+                data.ultimo_riego,
+                data.frecuencia_riego
             );
 
 
-        /* =========================================
-           ID DE LA MACETA
-        ========================================= */
-
-        const parametros =
-            new URLSearchParams(
-                window.location.search
+        document.getElementById(
+            "proximoRiego"
+        ).textContent =
+            proximo.toLocaleDateString(
+                "es-AR",
+                {
+                    day: "numeric",
+                    month: "long"
+                }
             );
 
-        const macetaID =
-            parametros.get("id") || "001";
+
+        const hoy = new Date();
+
+        hoy.setHours(0, 0, 0, 0);
+
+        proximo.setHours(0, 0, 0, 0);
 
 
-        /* =========================================
-           VARIABLE PARA EL ÚLTIMO RIEGO
-        ========================================= */
+        const diferencia =
+            Math.ceil(
+                (
+                    proximo - hoy
+                ) /
+                (
+                    1000 *
+                    60 *
+                    60 *
+                    24
+                )
+            );
 
-        let fechaUltimoRiego = "";
+
+        let textoEstado;
 
 
-        /* =========================================
-           FORMATEAR FECHA
-        ========================================= */
+        if (diferencia > 1) {
 
-        function formatearFecha(fecha) {
+            textoEstado =
+                `🟢 Faltan ${diferencia} días`;
 
-            if (!fecha) {
-                return "Sin registrar";
-            }
+        }
 
-            const partes =
-                fecha.split("-");
+        else if (diferencia === 1) {
 
-            if (partes.length !== 3) {
-                return fecha;
-            }
+            textoEstado =
+                "🟡 Mañana toca regar";
 
-            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        else if (diferencia === 0) {
+
+            textoEstado =
+                "🟠 Hoy toca regar";
+
+        }
+
+        else {
+
+            textoEstado =
+                `🔴 Necesita agua hace ${Math.abs(diferencia)} días`;
+
         }
 
 
-        /* =========================================
-           CARGAR MACETA
-        ========================================= */
+        document.getElementById(
+            "estado"
+        ).textContent =
+            textoEstado;
 
-        async function cargarMaceta() {
+    }
 
-            try {
-
-                const {
-                    data,
-                    error
-                } = await supabaseClient
-                    .from("macetas")
-                    .select("*")
-                    .eq("id", macetaID)
-                    .single();
+}
 
 
-                if (error) {
+/* ===========================
+   MOSTRAR INFORMACIÓN PLANTA
+=========================== */
 
-                    console.error(
-                        "Error cargando maceta:",
-                        error
-                    );
+function mostrarInfoPlanta() {
 
-                    document.getElementById("nombre")
-                        .textContent =
-                        "No se pudo cargar la maceta";
+    const ficha =
+        document.getElementById(
+            "fichaPlanta"
+        );
 
-                    return;
-                }
-
-
-                if (!data) {
-                    return;
-                }
+    const boton =
+        document.getElementById(
+            "botonInfoPlanta"
+        );
 
 
-                /* =========================
-                   DATOS PRINCIPALES
-                ========================= */
-
-                fechaUltimoRiego =
-                    data.ultimo_riego || "";
+    ficha.classList.toggle("mostrar");
 
 
-                document.getElementById("nombre")
-                    .textContent =
-                    data.nombre_planta ||
-                    "Mi plantita";
+    if (
+        ficha.classList.contains("mostrar")
+    ) {
+
+        boton.textContent =
+            "✕ Cerrar";
+
+    }
+
+    else {
+
+        boton.textContent =
+            "🌿 Información";
+
+    }
+
+}
 
 
-                document.getElementById("especie")
-                    .textContent =
-                    data.especie ||
-                    "Una plantita 🌱";
+/* ===========================
+   DATOS CURIOSOS
+=========================== */
+
+function mostrarCuriosidades() {
+
+    const contenido =
+        document.getElementById(
+            "curiosidades"
+        );
+
+    const boton =
+        document.getElementById(
+            "botonCuriosidades"
+        );
 
 
-                document.getElementById("frecuencia")
-                    .textContent =
-                    `Cada ${data.frecuencia_riego} días`;
+    contenido.classList.toggle(
+        "mostrar"
+    );
 
 
-                document.getElementById("luz")
-                    .textContent =
-                    data.luz ||
-                    "Sin registrar";
+    if (
+        contenido.classList.contains(
+            "mostrar"
+        )
+    ) {
+
+        boton.textContent =
+            "🌿 Ocultar datos curiosos";
+
+    }
+
+    else {
+
+        boton.textContent =
+            "🌿 ¿Sabías que...?";
+
+    }
+
+}
 
 
-                document.getElementById("ultimoRiego")
-                    .textContent =
-                    formatearFecha(
-                        data.ultimo_riego
-                    );
+/* ===========================
+   MOSTRAR FORMULARIO
+=========================== */
+
+function mostrarFormulario() {
+
+    const formulario =
+        document.getElementById(
+            "formulario"
+        );
 
 
-                document.getElementById("consejo")
-                    .textContent =
-                    data.consejo ||
-                    "Cuidame mucho ❤️";
+    formulario.style.display =
+        formulario.style.display === "block"
+        ? "none"
+        : "block";
 
 
-                document.getElementById("mensaje")
-                    .textContent =
-                    data.mensaje ||
-                    "❤️";
+    document.getElementById(
+        "inputNombre"
+    ).value =
+        document.getElementById(
+            "nombre"
+        ).textContent;
 
 
-                /* =========================
-                   CALCULAR PRÓXIMO RIEGO
-                ========================= */
-
-                calcularRiego(
-                    data.ultimo_riego,
-                    data.frecuencia_riego
-                );
+    document.getElementById(
+        "inputEspecie"
+    ).value =
+        document.getElementById(
+            "especie"
+        ).textContent;
 
 
-                /* =========================
-                   COMPLETAR FORMULARIO
-                ========================= */
-
-                document.getElementById("inputNombre")
-                    .value =
-                    data.nombre_planta || "";
-
-
-                document.getElementById("inputEspecie")
-                    .value =
-                    data.especie || "";
-
-
-                document.getElementById("inputFrecuencia")
-                    .value =
-                    data.frecuencia_riego || "";
-
-
-                document.getElementById("inputUltimoRiego")
-                    .value =
-                    data.ultimo_riego || "";
-
-
-                document.getElementById("inputLuz")
-                    .value =
-                    data.luz || "";
-
-
-                document.getElementById("inputConsejo")
-                    .value =
-                    data.consejo || "";
-
-
-                document.getElementById("inputMensaje")
-                    .value =
-                    data.mensaje || "";
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Error:",
-                    error
-                );
-
-            }
-
-        }
-
-
-        /* =========================================
-           CALCULAR RIEGO
-        ========================================= */
-
-        function calcularRiego(
-            ultimoRiego,
-            frecuencia
-        ) {
-
-            if (
-                !ultimoRiego ||
-                !frecuencia
-            ) {
-
-                document.getElementById(
-                    "proximoRiego"
-                ).textContent =
-                    "Sin registrar";
-
-                document.getElementById(
-                    "estadoRiego"
-                ).textContent =
-                    "💧 Falta información del riego";
-
-                return;
-            }
-
-
-            const fecha =
-                new Date(
-                    ultimoRiego +
-                    "T00:00:00"
-                );
-
-
-            fecha.setDate(
-                fecha.getDate() +
-                Number(frecuencia)
+    document.getElementById(
+        "inputRiego"
+    ).value =
+        document
+            .getElementById(
+                "frecuencia"
+            )
+            .textContent
+            .replace(
+                "Cada ",
+                ""
+            )
+            .replace(
+                " días",
+                ""
             );
 
 
+    /* CORRECCIÓN:
+       ahora recupera la fecha real */
+
+    document.getElementById(
+        "inputUltimoRiego"
+    ).value =
+        fechaUltimoRiego;
+
+
+    document.getElementById(
+        "inputLuz"
+    ).value =
+        document.getElementById(
+            "luz"
+        ).textContent;
+
+
+    document.getElementById(
+        "inputConsejo"
+    ).value =
+        document.getElementById(
+            "consejo"
+        ).textContent;
+
+
+    document.getElementById(
+        "inputMensaje"
+    ).value =
+        document.getElementById(
+            "mensaje"
+        ).textContent;
+
+}
+
+
+/* ===========================
+   GUARDAR DATOS
+=========================== */
+
+async function guardarDatos() {
+
+    const nombre =
+        document.getElementById(
+            "inputNombre"
+        ).value;
+
+
+    const especie =
+        document.getElementById(
+            "inputEspecie"
+        ).value;
+
+
+    const riego =
+        Number(
             document.getElementById(
-                "proximoRiego"
-            ).textContent =
-                formatearFecha(
-                    fecha.toISOString().split("T")[0]
-                );
+                "inputRiego"
+            ).value
+        );
 
 
-            const hoy =
-                new Date();
-
-            hoy.setHours(
-                0,
-                0,
-                0,
-                0
-            );
+    const ultimoRiego =
+        document.getElementById(
+            "inputUltimoRiego"
+        ).value;
 
 
-            const diferencia =
-                Math.ceil(
-                    (
-                        fecha - hoy
-                    ) /
-                    (
-                        1000 *
-                        60 *
-                        60 *
-                        24
-                    )
-                );
+    const luz =
+        document.getElementById(
+            "inputLuz"
+        ).value;
 
 
-            const estado =
-                document.getElementById(
-                    "estadoRiego"
-                );
+    const consejo =
+        document.getElementById(
+            "inputConsejo"
+        ).value;
 
 
-            if (diferencia > 1) {
-
-                estado.textContent =
-                    `🟢 Faltan ${diferencia} días`;
-
-            }
-
-            else if (diferencia === 1) {
-
-                estado.textContent =
-                    "🟡 Mañana toca regar";
-
-            }
-
-            else if (diferencia === 0) {
-
-                estado.textContent =
-                    "🟠 Hoy toca regar";
-
-            }
-
-            else {
-
-                estado.textContent =
-                    `🔴 Necesita agua hace ${Math.abs(diferencia)} días`;
-
-            }
-
-        }
+    const mensaje =
+        document.getElementById(
+            "inputMensaje"
+        ).value;
 
 
-        /* =========================================
-           MOSTRAR FORMULARIO
-        ========================================= */
+    const {
+        error
+    } = await supabaseClient
+        .from("macetas")
+        .update({
 
-        function mostrarFormulario() {
+            nombre_planta:
+                nombre,
 
-            const formulario =
-                document.getElementById(
-                    "formulario"
-                );
+            especie:
+                especie,
 
-            formulario.classList.toggle(
-                "mostrar"
-            );
+            frecuencia_riego:
+                riego,
 
-        }
+            ultimo_riego:
+                ultimoRiego || null,
 
+            luz:
+                luz,
 
-        /* =========================================
-           GUARDAR DATOS
-        ========================================= */
+            consejo:
+                consejo,
 
-        async function guardarDatos() {
+            mensaje:
+                mensaje
 
-            const nombre =
-                document.getElementById(
-                    "inputNombre"
-                ).value;
-
-            const especie =
-                document.getElementById(
-                    "inputEspecie"
-                ).value;
-
-            const frecuencia =
-                document.getElementById(
-                    "inputFrecuencia"
-                ).value;
-
-            const ultimoRiego =
-                document.getElementById(
-                    "inputUltimoRiego"
-                ).value;
-
-            const luz =
-                document.getElementById(
-                    "inputLuz"
-                ).value;
-
-            const consejo =
-                document.getElementById(
-                    "inputConsejo"
-                ).value;
-
-            const mensaje =
-                document.getElementById(
-                    "inputMensaje"
-                ).value;
+        })
+        .eq(
+            "id",
+            macetaID
+        );
 
 
-            const {
-                error
-            } = await supabaseClient
-                .from("macetas")
-                .update({
+    if (error) {
 
-                    nombre_planta:
-                        nombre,
+        console.error(error);
 
-                    especie:
-                        especie,
+        alert(
+            "Hubo un error al guardar 😢"
+        );
 
-                    frecuencia_riego:
-                        frecuencia,
+        return;
 
-                    ultimo_riego:
-                        ultimoRiego,
-
-                    luz:
-                        luz,
-
-                    consejo:
-                        consejo,
-
-                    mensaje:
-                        mensaje
-
-                })
-                .eq(
-                    "id",
-                    macetaID
-                );
+    }
 
 
-            if (error) {
-
-                alert(
-                    "❌ No se pudieron guardar los cambios."
-                );
-
-                console.error(
-                    error
-                );
-
-                return;
-            }
+    alert(
+        "¡Plantita actualizada! 🌱❤️"
+    );
 
 
-            alert(
-                "✅ Datos guardados correctamente."
-            );
+    location.reload();
+
+}
 
 
-            cargarMaceta();
+/* ===========================
+   INICIAR
+=========================== */
 
-        }
+cargarMaceta();
 
-
-        /* =========================================
-           INICIAR
-        ========================================= */
-
-        cargarMaceta();
-
-    </script>
+</script>
 
 </body>
-
 </html>
-```
